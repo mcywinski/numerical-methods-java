@@ -66,46 +66,46 @@ public class LUDecomposition {
         lMatrix = new Matrix(new double[size][size]);
         uMatrix = new Matrix(new double[size][size]);
         
-        for (int i = 0 ; i < aMatrix.getRowDimension(); i++) {
+        for (int i = 0 ; i < size; i++) {
             double calculatedValue;
             
             //Go through horizontally
-            for (int j = 0; j < uMatrix.getColumnDimension(); j++) {
-                if (i > j) { //All values above diagonal
+            for (int j = 0; j < size; j++) {
+                if (i > j) { //All values below diagonal
                     calculatedValue = 0;
                     uMatrix.set(i, j, calculatedValue);
                 }
                 else {
                     double valueA = aMatrix.get(i, j);
-                    double sum = valueA;
+                    double sum = 0;
                     for (int k = 0; k <= i - 1; k++) {
                         double lValue = lMatrix.get(i, k);
                         double uValue = uMatrix.get(k, j);
                         sum += (lValue * uValue);
                     }
-                    uMatrix.set(i, j, sum);
+                    uMatrix.set(i, j, valueA - sum);
                 }
             }
             
             //Go vertically
-            for (int j = 0; j < lMatrix.getRowDimension(); j++) {
+            for (int j = 0; j < size; j++) {
                 if (i == j) { //Diagonal
                     calculatedValue = 1;
                     lMatrix.set(i, j, calculatedValue);
                 }
-                else if (i > j) { //All values below diagonal
+                else if (i > j) { //All values above diagonal
                     calculatedValue = 0;
-                    lMatrix.set(i, j, calculatedValue);
+                    lMatrix.set(j, i, calculatedValue);
                 }
-                else if (i < j) { //All values above diagonal
+                else if (i < j) { //All values below diagonal
                     double valueA = aMatrix.get(j, i);
-                    double sum = valueA;
+                    double sum = 0;
                     for (int k = 0; k <= i - 1; k++) {
                         double lVal = lMatrix.get(j, k);
                         double uVal = uMatrix.get(k, i);
                         sum += (lVal * uVal);
                     }
-                    double finalValue = sum / uMatrix.get(i, i);
+                    double finalValue = (valueA - sum) / uMatrix.get(i, i);
                     lMatrix.set(j, i, finalValue);
                 }
             }
