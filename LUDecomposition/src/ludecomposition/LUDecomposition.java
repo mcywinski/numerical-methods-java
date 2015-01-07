@@ -8,6 +8,7 @@
 package ludecomposition;
 
 import Jama.Matrix;
+import matrixhelpers.MatrixHelpers;
 
 /**
  *
@@ -20,7 +21,9 @@ public class LUDecomposition {
      */
     public static void main(String[] args) {
         
-        boolean useFixtureData = false;
+        Matrix aMatrix = null;
+        boolean useFixtureData = true;
+        
         if (useFixtureData) {
             double[][] rawAMatrix = new double[4][4];
             
@@ -48,13 +51,33 @@ public class LUDecomposition {
             rawAMatrix[3][2] = 4;
             rawAMatrix[3][3] = -9;
             
-            
-            Matrix aMatrix = new Matrix(rawAMatrix);
+            aMatrix = new Matrix(rawAMatrix);
         }
         else {
-            //TODO Prompt user for non-fixture data
+            //TODO: Prompt user for non-fixture data
         }
         
+        System.out.println("A matrix is: ");
+        MatrixHelpers.printMatrix(aMatrix);
+        
+        //LU Decomposition starts here
+        Matrix lMatrix, uMatrix;
+        lMatrix = new Matrix(new double[aMatrix.getRowDimension()][aMatrix.getColumnDimension()]);
+        uMatrix = new Matrix(new double[aMatrix.getRowDimension()][aMatrix.getColumnDimension()]);
+        
+        
+        for (int i = 0 ; i < aMatrix.getRowDimension(); i++) {
+            //Go through columns
+            for (int m = 0; m < uMatrix.getColumnDimension(); m++) {
+                double calculatedValue;
+                if (i > m) {
+                    calculatedValue = 0;
+                }
+                else { //i >= m, value must be calculated
+                    //TODO: Calculation method
+                }
+            }
+        }
     }
     
 }
