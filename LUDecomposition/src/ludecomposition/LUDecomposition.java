@@ -61,23 +61,62 @@ public class LUDecomposition {
         MatrixHelpers.printMatrix(aMatrix);
         
         //LU Decomposition starts here
+        int size = aMatrix.getColumnDimension();
         Matrix lMatrix, uMatrix;
-        lMatrix = new Matrix(new double[aMatrix.getRowDimension()][aMatrix.getColumnDimension()]);
-        uMatrix = new Matrix(new double[aMatrix.getRowDimension()][aMatrix.getColumnDimension()]);
-        
+        lMatrix = new Matrix(new double[size][size]);
+        uMatrix = new Matrix(new double[size][size]);
         
         for (int i = 0 ; i < aMatrix.getRowDimension(); i++) {
-            //Go through columns
-            for (int m = 0; m < uMatrix.getColumnDimension(); m++) {
-                double calculatedValue;
-                if (i > m) {
+            double calculatedValue;
+            
+            //Go through horizontally
+            for (int j = 0; j < uMatrix.getColumnDimension(); j++) {
+                if (i > j) { //All values above diagonal
                     calculatedValue = 0;
+                    uMatrix.set(i, j, calculatedValue);
                 }
-                else { //i >= m, value must be calculated
-                    //TODO: Calculation method
+                else {
+                    double valueA = aMatrix.get(i, j);
+                    double sum = valueA;
+                    for (int k = 0; k <= i - 1; k++) {
+                        double lValue = lMatrix.get(i, k);
+                        double uValue = uMatrix.get(k, j);
+                        sum += (lValue * uValue);
+                    }
+                    uMatrix.set(i, j, sum);
+                }
+            }
+            
+            //Go vertically
+            for (int j = 0; j < lMatrix.getRowDimension(); j++) {
+                if (i == j) { //Diagonal
+                    calculatedValue = 1;
+                    lMatrix.set(i, j, calculatedValue);
+                }
+                else if (i > j) { //All values below diagonal
+                    calculatedValue = 0;
+                    lMatrix.set(i, j, calculatedValue);
+                }
+                else if (i < j) { //All values above diagonal
+                    double valueA = aMatrix.get(j, i);
+                    double sum = valueA;
+                    for (int k = 0; k <= i - 1; k++) {
+                        double lVal = lMatrix.get(j, k);
+                        double uVal = uMatrix.get(k, i);
+                        sum += (lVal * uVal);
+                    }
+                    double finalValue = sum / uMatrix.get(i, i);
+                    lMatrix.set(j, i, finalValue);
                 }
             }
         }
+        
+        //Print the values to the screen
+        System.out.println("L matrix is: ");
+        MatrixHelpers.printMatrix(lMatrix);
+        
+        System.out.println("U matrix is: ");
+        MatrixHelpers.printMatrix(uMatrix);
     }
     
 }
